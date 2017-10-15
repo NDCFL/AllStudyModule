@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.dao.PropDAO">
+  <resultMap id="propMap" type="prop">
+  </resultMap>
+  <select id="pagelist" resultMap="propMap" parameterType="string">
+    select * from  prop
+  </select>
+
+  <insert id="add" parameterType="com.ht.pojo.Prop">
+      insert into prop(prop_id,prop_name,prop_price,prop_skill,prop_genre) values(replace(uuid(),'-',''),#{propName},#{propPrice},#{propSkill},#{propGenre})
+  </insert>
+   <update id="update"  parameterType="com.ht.pojo.Prop">
+       update prop set prop_name = #{propName},prop_price = #{propPrice},prop_skill = #{propSkill},prop_genre = #{propGenre} where prop_id = #{propId}
+   </update>
+    <delete id="delete" parameterType="string">
+        delete from prop where prop_id = #{propId}
+    </delete>
+    <select id="queryById" parameterType="string" resultMap="propMap">
+        select * from prop where prop_id = #{propId}
+    </select>
+  <!--
+    <resultMap id="propMap" type="prop">
+    <id property="id" column="id"></id>
+    <result column="name" property="name"></result>
+    <result column="price" property="price"></result>
+    <result column="createtime" property="createtime"></result>
+      <association property="user" javaType="user">
+        <id column="user_id" property="id"></id>
+        <result column="name" property="name"></result>
+      </association>
+      <collection property="propItemsList" javaType="java.util.List" ofType="propitems">
+        <id property="id" column="itemsid"></id>
+        <result column="summoney" property="summoney"></result>
+        <result column="count" property="count"></result>
+        <association property="product" javaType="product">
+          <id property="id" column="pid"></id>
+          <result column="name" property="name"></result>
+        </association>
+      </collection>
+  </resultMap>
+  <select id="pagelist" resultMap="propMap">
+    select o.*,u.id as user_id,u.name,i.id as itemsid,i.count,i.summoney,p.id as pid,p.name from users u,prop o,propitems i,product p where u.id=o.userid and o.id=i.orderid and p.id=i.productid
+  </select>
+  -->
+</mapper>

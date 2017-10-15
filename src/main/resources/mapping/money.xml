@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.dao.MoneyDAO">
+  <resultMap id="moneyMap" type="money">
+      <id property="moneyId" column="money_id"></id>
+      <result column="money" property="money"></result>
+      <association property="plays" javaType="com.ht.pojo.Plays">
+          <id property="playId" column="playid"></id>
+          <result column="play_nickname" property="playNickname"></result>
+      </association>
+  </resultMap>
+  <insert id="add" parameterType="com.ht.pojo.Money">
+      insert into money(money_id,money,play_id) values(replace(uuid(),'-',''),#{money},#{playId})
+  </insert>
+   <update id="update"  parameterType="com.ht.pojo.Money">
+       update money set money = money+#{money} where play_id = #{playId}
+   </update>
+    <update id="saleMoney"  parameterType="com.ht.pojo.Money">
+        update money set money = money-#{money} where play_id = #{id}
+    </update>
+    <delete id="delete" parameterType="string">
+        delete from money where money_id = #{moneyId}
+    </delete>
+    <select id="queryById" parameterType="string" resultMap="moneyMap">
+        select * from money where play_id = #{playId}
+    </select>
+    <select id="allMoney" parameterType="string" resultType="double">
+        select ifnull(sum(money),0.0) from money where play_id = #{playId}
+    </select>
+    <select id="findPageList"  resultMap="moneyMap" parameterType="string">
+        select m.money_id,m.money,p.play_id as playid,p.play_nickname from money m,play p where p.play_id=m.play_id and m.play_id=#{playId}
+    </select>
+    <insert id="addarry" parameterType="java.lang.Double">
+        insert into money(money_id,money,play_id) values
+        <foreach collection="array" index="index" item="item" separator=",">
+            (replace(uuid(),'-',''),#{item},replace(uuid(),'-',''))
+        </foreach>
+    </insert>
+</mapper>

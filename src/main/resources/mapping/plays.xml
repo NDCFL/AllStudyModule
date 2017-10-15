@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.dao.PlaysDAO">
+  <resultMap id="playsMap" type="plays">
+  </resultMap>
+  <select id="pagelist" resultMap="playsMap">
+    select * from play
+--       select * from play
+</select>
+
+  <insert id="add" parameterType="com.ht.pojo.Plays">
+      insert into play(play_id,play_nickname,play_account,play_password,play_isvip) values(replace(uuid(),'-',''),#{playNickname},#{playAccount},#{playPassword},#{playIsVip})
+  </insert>
+   <update id="update"  parameterType="com.ht.pojo.Plays">
+       update play set play_nickname = #{playNickname} where play_id = #{playId}
+   </update>
+    <delete id="delete" parameterType="string">
+        delete from play where play_id = #{playId}
+    </delete>
+    <select id="queryById" parameterType="string" resultMap="playsMap">
+        select * from play where play_id = #{playId}
+    </select>
+    <select id="findplays" parameterType="string" resultMap="playsMap">
+        select * from play where play_account = #{playAccount}
+    </select>
+  <!--
+    <resultMap id="ordersMap" type="play">
+    <id property="id" column="id"></id>
+    <result column="name" property="name"></result>
+    <result column="price" property="price"></result>
+    <result column="createtime" property="createtime"></result>
+      <association property="user" javaType="user">
+        <id column="user_id" property="id"></id>
+        <result column="name" property="name"></result>
+      </association>
+      <collection property="ordersItemsList" javaType="java.util.List" ofType="ordersitems">
+        <id property="id" column="itemsid"></id>
+        <result column="summoney" property="summoney"></result>
+        <result column="count" property="count"></result>
+        <association property="product" javaType="product">
+          <id property="id" column="pid"></id>
+          <result column="name" property="name"></result>
+        </association>
+      </collection>
+  </resultMap>
+  <select id="pagelist" resultMap="ordersMap">
+    select o.*,u.id as user_id,u.name,i.id as itemsid,i.count,i.summoney,p.id as pid,p.name from users u,play o,ordersitems i,product p where u.id=o.userid and o.id=i.orderid and p.id=i.productid
+  </select>
+  -->
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.dao.ProductDAO">
+  <resultMap id="BaseResultMap" type="product"></resultMap>
+  <sql id="Base_Column_List">id, name,price</sql>
+  <select id="queryById" resultMap="BaseResultMap" parameterType="java.lang.String">
+      select
+      <include refid="Base_Column_List"/>
+      from product where id = #{id}
+  </select>
+  <delete id="delete" parameterType="java.lang.String">
+        delete from product where id = #{id}
+  </delete>
+  <select id="pagelist" resultMap="BaseResultMap">
+        select * from product
+  </select>
+  <insert id="add" parameterType="com.ht.pojo.Product">
+        insert into product (id, name,price) values (replace(uuid(),'-',''), #{name},#{price})
+  </insert>
+  <update id="update" parameterType="com.ht.pojo.Product">
+        update product
+        <set>
+            <if test="name!=null and name!=''">
+                name = #{name},
+            </if>
+            <if test="price!=''">
+                price = #{price},
+            </if>
+        </set>
+        where id = #{id}
+  </update>
+</mapper>

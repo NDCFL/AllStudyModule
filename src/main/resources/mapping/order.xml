@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.dao.OrdersDAO">
+  <resultMap id="ordersMap" type="orders">
+      <id property="id" column="id"></id>
+      <result column="name" property="name"></result>
+      <result column="price" property="price"></result>
+      <result property="createTime" column="createtime"></result>
+      <association property="user" javaType="user">
+        <id property="id" column="user_id"></id>
+        <result column="username" property="name"></result>
+        <result column="age" property="age"></result>
+      </association>
+  </resultMap>
+  <select id="pagelist" resultMap="ordersMap" parameterType="string">
+    select o.*,u.id as user_id,u.name as username from users u,orders o where u.id=o.userid and o.userid=#{id}
+</select>
+
+  <insert id="add" parameterType="com.ht.pojo.Orders">
+      insert into orders(id,name,price,createtime,userid) values(replace(uuid(),'-',''),#{name},#{price},#{createTime},#{userId})
+  </insert>
+   <update id="update"  parameterType="com.ht.pojo.Orders">
+       update orders set name = #{name},price = #{price},createtime = #{createTime} where id = #{id}
+   </update>
+    <delete id="delete" parameterType="string">
+        delete from orders where id = #{id}
+    </delete>
+    <select id="queryById" parameterType="string" resultMap="ordersMap">
+        select * from orders where id=#{id}
+    </select>
+</mapper>
